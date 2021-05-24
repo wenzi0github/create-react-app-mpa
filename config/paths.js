@@ -55,9 +55,16 @@ module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
   appBuild: resolveApp(buildPath),
+  appProjectBuild: (project) => {
+    if (project) {
+      return resolveApp(`dist/${project.buildPath}/${project.project}`);
+    }
+    return resolveApp('dist')
+  }, // build后的目录
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveModule(resolveApp, 'src/index'),
+  appProjectIndexJs: (project) => resolveModule(resolveApp, `src/pages/${project.project}/${project.name}`), // 项目的入口文件
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appTsConfig: resolveApp('tsconfig.json'),
