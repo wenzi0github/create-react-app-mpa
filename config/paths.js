@@ -57,9 +57,9 @@ module.exports = {
   appBuild: resolveApp(buildPath),
   appProjectBuild: (project) => {
     if (project) {
-      return resolveApp(`dist/${project.buildPath}/${project.project}`);
+      return resolveApp(`${buildPath}/${project.project}`);
     }
-    return resolveApp('dist')
+    return resolveApp(buildPath)
   }, // build后的目录
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),

@@ -54,9 +54,6 @@ const imageInlineSizeLimit = parseInt(
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
-// Get the path to the uncompiled service worker (if it exists).
-const swSrc = paths.swSrc;
-
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -100,7 +97,7 @@ module.exports = function (webpackEnv, project) {
   // 读取viewportWidth的配置
   // 正式环境是按照页面构建的，project表示是一个页面的配置
   // 本地环境是按照项目构建的，project是页面的数组集合
-  const { viewportWidth } = isEnvProduction ? project.config : project[0].config;
+  // const { viewportWidth } = isEnvProduction ? project.config : project[0].config;
 
   /**
    * 获取入口
@@ -132,12 +129,11 @@ module.exports = function (webpackEnv, project) {
           Object.assign(
             {},
             {
-              title: pages.config.title,
               inject: true,
               template: paths.appHtml,
               filename: `${pages.name}.html`,
               compiledTime: new Date().toLocaleString(),
-              projectname: pages.config.project,
+              projectname: pages.project,
               minify: {
                 removeComments: true,
                 collapseWhitespace: true,
@@ -160,9 +156,8 @@ module.exports = function (webpackEnv, project) {
         Object.assign(
           {},
           {
-            title: page.config.title,
             inject: true,
-            projectname: page.config.project,
+            projectname: page.project,
             template: paths.appHtml,
             filename: `${page.name}.html`,
             chunks: [page.name],
@@ -206,7 +201,7 @@ module.exports = function (webpackEnv, project) {
               stage: 3,
             }),
             require('postcss-px-to-viewport')({
-              viewportWidth: viewportWidth || 750,
+              viewportWidth: 375,
               unitPrecision: 3,
               viewportUnit: 'vw'
             }),
@@ -707,24 +702,24 @@ module.exports = function (webpackEnv, project) {
       //   `index.html`
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
-      new ManifestPlugin({
-        fileName: 'asset-manifest.json',
-        publicPath: paths.publicUrlOrPath,
-        generate: (seed, files, entrypoints) => {
-          const manifestFiles = files.reduce((manifest, file) => {
-            manifest[file.name] = file.path;
-            return manifest;
-          }, seed);
-          const entrypointFiles = entrypoints.main.filter(
-            fileName => !fileName.endsWith('.map')
-          );
+      // new ManifestPlugin({
+      //   fileName: 'asset-manifest.json',
+      //   publicPath: paths.publicUrlOrPath,
+      //   generate: (seed, files, entrypoints) => {
+      //     const manifestFiles = files.reduce((manifest, file) => {
+      //       manifest[file.name] = file.path;
+      //       return manifest;
+      //     }, seed);
+      //     const entrypointFiles = entrypoints.main.filter(
+      //       fileName => !fileName.endsWith('.map')
+      //     );
 
-          return {
-            files: manifestFiles,
-            entrypoints: entrypointFiles,
-          };
-        },
-      }),
+      //     return {
+      //       files: manifestFiles,
+      //       entrypoints: entrypointFiles,
+      //     };
+      //   },
+      // }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.

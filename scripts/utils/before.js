@@ -2,7 +2,6 @@
 const chalk = require('react-dev-utils/chalk');
 const glob = require('glob');
 const path = require('path');
-const getConfigByConfig = require('./getConfig');
 
 const noFileMsg = (project) => `start error, the reason may be:\n
 1. project enter error, please ensure you right;
@@ -25,12 +24,9 @@ const beforeFn = async () => {
       .map((item) => {
         const { ext, name } = path.parse(item);
         if (ext === '.tsx') {
-          const config = getConfigByConfig(`src/pages/${project}/${name}.json`);
-
           return {
             name,
             project,
-            config,
             src: item,
           };
         }
@@ -40,7 +36,7 @@ const beforeFn = async () => {
     return Promise.resolve(ss);
   } else {
     // 命令不正确
-    console.log(chalk.red(`please start like: \`npm run start home\`, or \`npm run start --page home\`\n`));
+    console.log(chalk.red(`please add argv: \`npm run start home\`, or \`npm run build home\`\n`));
     process.exit(1);
   }
 };
